@@ -1,19 +1,20 @@
-import { userRegisterModel } from "../model/userRegisterModel";
+import { userRegisterModel } from "../model/userRegisterModel.js";
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
 
-export const userFromReact = async (req,res)=>{
+export const userRegister = async (req,res)=>{
  try {
-    let{name, username, email, password, phone_number, address} = req.body;
-    let findUser = await userModel.findOne({
+    let{name, email, password, phone_number, address} = req.body;
+    let findUser = await userRegisterModel.findOne({
         email,
-    });
+        });
     if(findUser){
          return res.status(400).json({
             message : "Email already exist"
         });
     }
-    let phone_numberCheck = (phone_number)=>{
+      console.log("cbgfchgh",phone_number);
+    let phone_numberCheck  = (phone_number)=>{
             let firstDigit =  phone_number[0];
             let values = ['6','7','8','9']
             if(values.includes(firstDigit)){
@@ -23,36 +24,24 @@ export const userFromReact = async (req,res)=>{
                 return false;
             }   
         }
+        console.log(phone_number);
         if(!phone_numberCheck(phone_number)){
             return res.status(400).json({
                 message : "Please enter a valid phone number"
             });
         }
     let hashPassword = await bcrypt.hash(password,10);
-    let user =  await userModel.create({
+    const user =  await userRegisterModel.create({
         name,
-        username,
         email,
         password : hashPassword,
         phone_number,
         address
     });
-    let hideFields =  await userModel.aggregate([
-        {
-            $match: {
-                _id : user._id
-            }
-        },
-        {
-            $project : {
-                password : 0,
-                __v      : 0
-            }
-        }
-    ]);
+    const registeredUser = await userRegisterModel.findById(user._id).select('-password -__v');
     return res.json({
         message : "User register successfully",
-        Data    :  hideFields
+        Data    :  registeredUser
     });
     console.log(user);
     } 
@@ -64,10 +53,10 @@ export const userFromReact = async (req,res)=>{
         });
     }
 }
-export const userLoginFromReact = async (req,res)=>{
+export const userLogin = async (req,res)=>{
     try {
         let {email, password} = req.body;
-        let findUser = await userModel.findOne({
+        let findUser = await userRegisterModel.findOne({
             email
         });
         if(!findUser){
@@ -89,10 +78,9 @@ export const userLoginFromReact = async (req,res)=>{
             res.cookie("token", Token ,{
                 httpOnly : true, 
                 secure   : true,
-                // sameSite: 'lax', 
                 maxAge   : 1000*60*60*24
             });
-        let hidePassword =  await userModel.aggregate([
+        let hidePassword =  await userRegisterModel.aggregate([
             {
                 $match : {
                     _id : findUser._id  
@@ -136,7 +124,7 @@ export const userLogOut = async (req,res)=>{
 }
 export const getCurrentUser = async (req,res) =>{
     try {
-       let findUser = await userModel.findById(req.user.id).select('-password');
+       let findUser = await userRegisterModel.findById(req.user.id).select('-password');
         if(!findUser){
             return res.json({
                 message :"User not found in dataBase"
