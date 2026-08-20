@@ -24,10 +24,6 @@ let result = [
         .matches(/^[6-9]\d{9}$/)
         .withMessage("Please enter a valid 10-digit phone number"),
 
-         body("address")
-        .notEmpty()
-        .withMessage("address can't be empty"),
-        
       (req, res, next)=>{
       let errors =  validationResult(req)
       try{

@@ -1,8 +1,10 @@
 import { userRegisterModel } from "../model/userRegisterModel.js";
 import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken';
+import mongoose from "mongoose";
+import { addressModel } from "../model/storeUserMultipleAddress.js";
 
-export const userRegister = async (req,res)=>{
+export const userRegister = async (req,res)=>{ 
  try {
     let{name, email, password, phone_number, address} = req.body;
     let findUser = await userRegisterModel.findOne({
@@ -11,9 +13,8 @@ export const userRegister = async (req,res)=>{
     if(findUser){
          return res.status(400).json({
             message : "Email already exist"
-        });
+        }); 
     }
-      console.log("cbgfchgh",phone_number);
     let phone_numberCheck  = (phone_number)=>{
             let firstDigit =  phone_number[0];
             let values = ['6','7','8','9']
@@ -43,10 +44,8 @@ export const userRegister = async (req,res)=>{
         message : "User register successfully",
         Data    :  registeredUser
     });
-    console.log(user);
     } 
     catch (error) {
-        console.log(error);
        return res.status(500).json({
             message : "User not Register",
             error : error.message
@@ -77,28 +76,13 @@ export const userLogin = async (req,res)=>{
             );
             res.cookie("token", Token ,{
                 httpOnly : true, 
-                secure   : true,
-                maxAge   : 1000*60*60*24
+                secure   : false,
+                maxAge   : 1000*60*60*24,
             });
-        let hidePassword =  await userRegisterModel.aggregate([
-            {
-                $match : {
-                    _id : findUser._id  
-                }
-            },
-            {
-                $project : {
-                    password : 0,
-                    __v : 0
-                }
-            }
-        ]);
         res.json({
             message : "you are loggin",
-            User    : hidePassword
         });
     } catch (error) {
-        console.log(error)
         return res.json({
             message : "server error",
             error   : error
@@ -107,13 +91,14 @@ export const userLogin = async (req,res)=>{
 }
 export const userLogOut = async (req,res)=>{
     try {
-       await res.clearCookie("token",{
+        await res.clearCookie("token",{
         httpOnly : true,
-        secure   : true  
+        secure   : false,
        }); 
        res.json({
         message : " user logout"
        }); 
+       console.log("token after logout",req.cookies.token);
     } catch (error) {
         console.log(error)
        return res.json({
@@ -124,11 +109,11 @@ export const userLogOut = async (req,res)=>{
 }
 export const getCurrentUser = async (req,res) =>{
     try {
-       let findUser = await userRegisterModel.findById(req.user.id).select('-password');
+       let findUser = await userRegisterModel.findById(req.data.id).select('-password -__v');
         if(!findUser){
             return res.json({
                 message :"User not found in dataBase"
-            })
+            });
         }  
         res.json({
             message : "User logged in",
@@ -138,6 +123,84 @@ export const getCurrentUser = async (req,res) =>{
     catch (error) {
        return res.json({
           message : error.message
-       }) 
+       }); 
     }  
+}
+export const storeMultipleAddress = async (req, res) =>{
+    try {
+        let {address} = req.body;
+        let {user_id} = req.params;
+        let finduser_idInregisterModel = await userRegisterModel.findById(user_id);
+        if(!finduser_idInregisterModel){
+            return res.json({
+                message : "user_id not found"
+            });
+        }
+        let findUser_idInAddressModel  = await addressModel.findOne({
+            user_id
+        });
+        if(!findUser_idInAddressModel){
+            let addUser_id = await addressModel.create({
+                user_id,
+                address
+            });
+            return res.json({   
+                message : "User_id added successfully"
+            });
+        }
+        findUser_idInAddressModel.address.push(address);
+        await findUser_idInAddressModel.save();
+        res.json({   
+            message : "address added",
+        });
+    } catch (error) {
+        return res.json({
+            message : "address not added yet ",
+            error   : error
+        }); 
+    }
+}  
+export const DeleteUserAccount = async (req, res)=>{
+    try {
+        let{user_id} = req.params;
+        let findUser = await userRegisterModel.findById(user_id);
+        if(!findUser){
+            return res.json({
+                message : "user not found"
+            });
+        } 
+        await userRegisterModel.findByIdAndDelete(user_id); 
+        await addressModel.deleteOne({
+            user_id
+        });
+        return res.status(200).json({
+            message: "Account deleted successfully"
+        });
+    } catch (error) {
+         return res.status(500).json({
+            message: error.message
+        });
+    }
+}
+export const searchProducts = async (req, res)=>{
+    try {
+       let {name, brand} = req.body;
+       let search = name || brand;
+       let findProduct = await productModel.find({
+        $or : [
+            { name  : {$regex : `${search}`, $options : 'i'} },
+            { brand : {$regex : `${search}`, $options : 'i'} }
+        ]
+       });
+       if(!findProduct){
+            res.json({
+                message : " no product found"
+            });
+       }
+       res.json({
+         product : findProduct
+       }); 
+    } catch (error) {
+        message : error.message
+    }
 }
