@@ -7,7 +7,7 @@
  import {useState}                   from 'react';
  import {useDispatch, useSelector}   from 'react-redux';
  import {searchProducts}             from '../store/searchProducts.js';
- import Getlocation                  from '../pages/getlocation.jsx';  
+ import Location                     from '../pages/Location.jsx';
  import AddToCart                    from '../pages/AddToCart.jsx';
 
  function Navbar() {

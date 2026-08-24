@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-function Getlocation() {
+function Location() {
 
     const [address, setAddress] = useState("");
     console.log("locatin api running")
@@ -31,4 +31,4 @@ function Getlocation() {
     );
 }
 
-export default Getlocation;
+export default Location;
