@@ -8,7 +8,7 @@
  import {useDispatch, useSelector}   from 'react-redux';
  import {searchProducts}             from '../store/searchProducts.js';
  import Location                     from '../pages/Location.jsx';
- import AddToCart                    from '../pages/AddToCart.jsx';
+ import AddToCart                    from '../pages/AddCart.jsx';
 
  function Navbar() {
       const [search, setSearch] = useState("");
@@ -37,7 +37,7 @@
               <div><img src={website_Logo}/></div>
               <div className='brand-name'><h3>farmEra</h3><p>fresh from Nature</p></div>
            </div>
-           <div className='current-address' style={{overflowY : "scroll", scrollbarWidth : 'none'}} ><h3>Delivery in 8 minutes</h3><Getlocation/></div>
+           <div className='current-address' style={{overflowY : "scroll", scrollbarWidth : 'none'}} ><h3>Delivery in 8 minutes</h3><Location/></div>
            <div><div className='search-bar'><div className='search-icon'><img src={search_icon}/></div><input type='text' placeholder='Search for' value={search} onChange={handleSearch} /></div></div>
            <div className='user'><img src={user}/></div>
            <div><button className='btn' onClick={() => setCartOpen(true)} ><img src={cart} style={{height : "28px"}}/><p style={{fontSize :'12px'}}>My cart{cartCount > 0 && <p style={{fontSize : "18px"}}>{cartCount}</p>}</p></button></div>

@@ -14,7 +14,7 @@ import {
 
 import "../components/addCart.css";
 
-function AddToCart({ closeCart }) {
+function AddCart({ closeCart }) {
 
     const dispatch = useDispatch();
 
@@ -288,4 +288,4 @@ function AddToCart({ closeCart }) {
     );
 }
 
-export default AddToCart;
+export default AddCart;
