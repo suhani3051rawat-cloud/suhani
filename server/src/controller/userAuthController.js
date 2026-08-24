@@ -6,7 +6,7 @@ import { addressModel } from "../model/storeUserMultipleAddress.js";
 
 export const userRegister = async (req,res)=>{ 
  try {
-    let{name, email, password, phone_number, address} = req.body;
+    let{name, email, password, phone_number} = req.body;
     let findUser = await userRegisterModel.findOne({
         email,
         });
@@ -37,7 +37,6 @@ export const userRegister = async (req,res)=>{
         email,
         password : hashPassword,
         phone_number,
-        address
     });
     const registeredUser = await userRegisterModel.findById(user._id).select('-password -__v');
     return res.json({

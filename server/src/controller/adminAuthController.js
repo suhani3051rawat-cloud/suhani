@@ -224,7 +224,7 @@ export const ListProducts = async (req, res)=>{
         } 
         let fetchProductsFromProductModel = await productModel.find({
             category_id : findCategory._id
-        }).select("-category_id -image -__v");
+        }).select("-category_id -__v");
         res.json({
            message : "Data found",
            fetchProductsFromProductModel
@@ -237,8 +237,7 @@ export const ListProducts = async (req, res)=>{
 }
 export const searchProducts = async (req, res)=>{
     try {
-       let {name, brand} = req.body;
-       let search        = name || brand;
+       let { search } = req.query;
        let findProduct   = await productModel.find({
             $or : [
                 { name  : {$regex : `${search}`, $options : 'i'} },

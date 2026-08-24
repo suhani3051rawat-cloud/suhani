@@ -1,4 +1,3 @@
-import { ExpressValidator } from "express-validator";
 import { body, validationResult} from "express-validator";
 
 let result = [

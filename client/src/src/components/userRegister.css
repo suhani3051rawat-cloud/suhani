@@ -1,0 +1,81 @@
+.main-container{
+    background: #f6f8f4;
+    font-family: "Segoe UI", Arial, sans-serif;
+    margin-top:10px;
+}
+.userRegisterForm{
+  width:450px;
+  height:550px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e8ece5;
+  box-shadow: 0 6px 24px rgba(46, 125, 50, 0.08);
+  padding: 32px 28px;
+  text-align: center;
+}
+.userRegisterForm h3{
+    color : var(--primary-color);
+}
+.title{
+   color: rgb(158, 157, 157);
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap:3px;
+}
+form {
+  display: flex;
+  flex-direction: column;
+  margin-top:15px;
+  text-align:center;
+}
+input {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #d8ddd3;
+  font-size: 14px;
+  outline: none;
+  background: #fafbf9;
+  width:400px;
+}
+input:focus {
+  border-color: #2e7d32;
+}
+textarea {
+  height: 72px;
+  resize: none;
+}
+.button {
+  margin-top: 6px;
+  padding: 13px;
+  border-radius: 10px;
+  border: none;
+  background: #2e7d32;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.button:active{
+  background: #276b2b;
+}
+ 
+.footerText {
+  margin-top: 20px;
+  font-size: 13px;
+  color: #6b7280;
+}
+ 
+.link {
+  color: #2e7d32;
+  font-weight: 600;
+  cursor: pointer;
+}
+.error {
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+ 
