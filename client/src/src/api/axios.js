@@ -1,12 +1,12 @@
 import axios from 'axios';
 import React from 'react';
 
-export const api = axios.create({
-    baseURL: "http://localhost:5000/admin/Auth",
-    withCredentials: true
-});
+const API_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : "https://website-6-2r9x.onrender.com";
 
-// export const userRegisterApi = axios.create({
-//     baseURL : "http://localhost:5000/admin/user",
-//     withCredentials : true
-// })
+export const api = axios.create({
+  baseURL: `${API_URL}/admin/Auth`,
+  withCredentials: true,
+});
