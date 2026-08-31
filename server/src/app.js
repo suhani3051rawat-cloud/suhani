@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cookieParser());
 const allowedOrigins = [
     "http://localhost:5173",
-    "https://farmera-net.netlify.app"
+    "https://farmeraa-net.netlify.app"
 ];
 app.use(cors({
     origin: function (origin, callback) {
